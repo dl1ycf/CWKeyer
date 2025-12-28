@@ -67,8 +67,6 @@ void CWKeyerShield::setup(void)
     if (wm8960) {
       wm8960->enable();
       wm8960->volume(masterlevel_actual);
-      wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
-      wm8960->enableMicBias(1);
       //
       // DL1YCF comment start
       // ====================
@@ -91,7 +89,7 @@ void CWKeyerShield::setup(void)
       //
       // Typical input levels are
       //
-      // Dynamic Microphone : Vpp =    5 mV,  -55 dBV  ==> Level = 0.9
+      // Dynamic Microphone : Vpp =    5 mV,  -55 dBV  ==> Level = 1.0
       // Electret Microphone: Vpp =   50 mV,  -35 dBV  ==> Level = 0.5
       // Line level:          Vpp =  900 mV   -10 dBV  ==> Level = 0.0
       //
@@ -118,18 +116,36 @@ void CWKeyerShield::setup(void)
       // DL1YCF comment end
       // ==================
       //
-      wm8960->inputLevel(0.5F, 0.6F);     // volume control for mic input (both mic and MEMS)
+      // Sample setting for using a dynamic microphone (no bias) and muting the MEMS
+      //
+      //wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
+      //wm8960->enableMicBias(0);
+      //wm8960->inputLevel(0.9F, 0.0F);       // volume control for mic input (both mic and MEMS)
+      //
+      //
+      // Default Setting:
+      // - Electret Mic with Bias *and* built-in MEMS microphone
+      //
+      wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
+      wm8960->enableMicBias(1);
+      wm8960->inputLevel(0.5F, 0.6F);       // volume control for mic input (both mic and MEMS)
     }
     if (sgtl5000) {
       sgtl5000->enable();
       sgtl5000->volume(masterlevel_actual);
+      //
       // Note that this sets the Mic Bias voltage to 3.0 Volt and the Mic Bias
       // output impedance to 2 kOhm, and this is "hard-wired" into control_sgtl5000
       // in the audio library.
-      sgtl5000->inputSelect(AUDIO_INPUT_MIC);
       // The default microphone setting is 52 dB (40 dB preamp and 12 dB line-gain),
       // the correct value depends on the microphone but here we use some 12 dB less
-      sgtl5000->micGain(40);
+      // Sample setting for using MIC input
+      //sgtl5000->inputSelect(AUDIO_INPUT_MIC);
+      //sgtl5000->micGain(40);
+      //
+      // Default setting: use Line-In
+      sgtl5000->inputSelect(AUDIO_INPUT_LINEIN);
+      sgtl5000->lineInLevel(10);
     }
 
     AudioInterrupts();
@@ -549,7 +565,11 @@ void CWKeyerShield::pots()
 
             if (abs(Analog_MasterVol - last_mastervol) > 64) {
                 val=(Analog_MasterVol >> 6) & 0x7f;              // 0...127
-                mastervolume(127-val);                           // correct soldering
+                if (pot_reverse) {
+                  mastervolume(127-val);                           // correct soldering
+                } else {
+                  mastervolume(val);
+                }
                 last_mastervol = (val << 6) + 32;                // new "old" value
                 //Serial.print("MV ");
                 //Serial.println(analog_data);
@@ -561,7 +581,11 @@ void CWKeyerShield::pots()
             Analog_SideVol = (Analog_SideVol >> 1) + analog_data;
             if (abs(Analog_SideVol - last_sidevol) > 64) {
                 val=(Analog_SideVol >> 6) & 0x7F;                // 0...127
-                sidetonevolume(127-val);                         // correct soldering
+                if (pot_reverse) {
+                  sidetonevolume(127-val);                         // correct soldering
+                } else {
+                  sidetonevolume(val);
+                }
                 last_sidevol = (val << 6) + 32;                  // new "old" value
                 //Serial.print("SV ");
                 //Serial.println(analog_data);
@@ -573,7 +597,11 @@ void CWKeyerShield::pots()
             Analog_SideFreq = (Analog_SideFreq >> 1) + analog_data;
             if (abs(Analog_SideFreq - last_sidefreq) > 128) {
                 val=(Analog_SideFreq >> 7) & 0x3F;               // val 0...63, mapped to 40 ... 103 (400 to 1030 Hz)
-                sidetonefrequency(103-val);                      // correct soldering
+                if (pot_reverse) {
+                  sidetonefrequency(103-val);                      // correct soldering
+                } else {
+                  sidetonefrequency(val);
+                }
                 last_sidefreq = (val << 7) + 64;                 // new "old" value
                 //Serial.print("SF ");
                 //Serial.println(analog_data);
@@ -585,8 +613,13 @@ void CWKeyerShield::pots()
             Analog_Speed = (Analog_Speed >> 1) + analog_data;
             if (abs(Analog_Speed - last_speed) > 256) {
                 val=(Analog_Speed >> 8) & 0x1f;                  // 0...31, mapped to 0 ... 127 through SpeedTab
-                speed_set(SpeedTab[31-val]);                     // report to keyer
-                cwspeed(SpeedTab[31-val]);                       // report to radio
+                if (pot_reverse) {
+                  speed_set(SpeedTab[31-val]);                     // report to keyer, correct soldering
+                  cwspeed(SpeedTab[31-val]);                       // report to radio, correct soldering
+                } else {
+                  speed_set(SpeedTab[val]);                        // report to keyer
+                  cwspeed(SpeedTab[val]);                          // report to radio
+                }
                 last_speed = (val << 8) + 128;                   // new "old" value
                 //Serial.print("SP ");
                 //Serial.println(analog_data);

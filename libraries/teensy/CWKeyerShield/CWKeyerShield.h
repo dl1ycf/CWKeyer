@@ -243,6 +243,8 @@ public:
     void set_midi_keydown_note(int v)    { midi_keydown_note = v; }
     int  get_midi_keydown_note(void)     { return midi_keydown_note; }
 
+    void set_pot_reverse(int onoff)      { pot_reverse = onoff; }
+
 
 private:
     void monitor_ptt(void);                                     // monitor PTT-in line, do PTT
@@ -375,6 +377,14 @@ private:
                              13, 14, 15, 16, 17, 18, 19, 20,
                              21, 22, 23, 24, 26, 28, 30, 32,
                              34, 36, 38, 40, 43, 46, 49, 52};
+
+    //
+    // In the original KeyerShield, the potentiometers were not soldered correctly:
+    // turning them fully CCW gives maximum analog reading, and turning them fully CW
+    // gives zero analog reading. The following variable enables the code to treat
+    // both "normal" and "reversed" soldering (the default is TRUE).
+    //
+    uint8_t pot_reverse = 1;
 
 };
 
