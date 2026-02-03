@@ -96,8 +96,9 @@ void CWKeyerShield::setup(void)
       // so with a value of the input level between 0.0 and 1.0, one can cover the whole
       // range from dynamic microphones to line levels (these may occur if using an
       // external microphone pre-amp). A resonable default seems to be 0.5, but if you
-      // either connect a dynamic microphone or a line level source you either need
-      // to re-compile your KeyerShield firmware or use MIDI comands top re-adjust the level.
+      // do not intend to adjust the settings via MIDI commands, then you have to
+      // to re-compile your KeyerShield firmware with hard-wired parameters for
+      // MicBias and MicLevel that suite your microphone.
       //
       // Whereas the microphone jack only connects to the left audio channel, the
       // signal of the built-in MEMS microphone goes to the right audio channel. My
@@ -119,15 +120,15 @@ void CWKeyerShield::setup(void)
       // Sample setting for using a dynamic microphone (no bias) and muting the MEMS
       //
       //wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
-      //wm8960->enableMicBias(0);
-      //wm8960->inputLevel(0.9F, 0.0F);       // volume control for mic input (both mic and MEMS)
+      //wm8960->enableMicBias(0);             // 1 = Bias on, 0 = Bias off
+      //wm8960->inputLevel(0.8F, 0.0F);       // volume control for mic input (Dynamic Mic and no MEMS)
       //
       //
       // Default Setting:
       // - Electret Mic with Bias *and* built-in MEMS microphone
       //
       wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
-      wm8960->enableMicBias(1);
+      wm8960->enableMicBias(1);             // 1 = Bias on, 0 = Bias off
       wm8960->inputLevel(0.5F, 0.6F);       // volume control for mic input (both mic and MEMS)
     }
     if (sgtl5000) {
