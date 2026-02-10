@@ -68,12 +68,14 @@ void CWKeyerShield::setup(void)
       wm8960->enable();
       wm8960->volume(masterlevel_actual);
       //
-      // DL1YCF comment start
-      // ====================
+      // Setting the WM8960 input gain
+      // =============================
       //
-      // Note the level scale is logarithmic. For the mic input jack (left channel)
-      // I have measured the input voltage corresponding to full scale input
-      // (beyond that, clipping sets in)
+      // Note for wm8960->inputLevel(x,y), x and y are between 0 and 1 but the scale
+      // is logarithmic.
+      // For the mic input jack (left channel), I have measured the input voltage
+      // needed for full scale input (beyond that, clipping sets in) as a function of
+      // the level chosen:
       //
       //   Level       Vpp (mV)    Vrms(mV)  dBV
       //   -------------------------------------
@@ -84,14 +86,15 @@ void CWKeyerShield::setup(void)
       //    0.6          31          11      -39
       //    0.7          17           6      -44
       //
-      // so the empirical formula for a full-scale signal (in dBV) is
-      // dBV = -10 -50*level
+      // so the *empirical* formula for a full-scale signal (in dBV) is
       //
-      // Typical input levels are
+      // dBV = -10 -50*level, or level = - (dbV + 10) / 50
       //
-      // Dynamic Microphone : Vpp =    5 mV,  -55 dBV  ==> Level = 1.0
+      // Typical input levels are (with a grain of salt)
+      //
+      // Dynamic Microphone : Vpp =    5 mV,  -55 dBV  ==> Level = 0.9
       // Electret Microphone: Vpp =   50 mV,  -35 dBV  ==> Level = 0.5
-      // Line level:          Vpp =  900 mV   -10 dBV  ==> Level = 0.0
+      // Line level:          Vpp =  900 mV,  -10 dBV  ==> Level = 0.0
       //
       // so with a value of the input level between 0.0 and 1.0, one can cover the whole
       // range from dynamic microphones to line levels (these may occur if using an
@@ -107,21 +110,25 @@ void CWKeyerShield::setup(void)
       // and place it just before their mouth!
       //
       // An API in which one can switch between MEMS and MIC such that the chosen signal
-      // (occurs on both channels) my be preferred, but then you need to adapt
+      // (occurs on both channels) may be preferred, but then you need to adapt
       // control_wm8960.cpp in the Audio library. This applies in particular when using
-      // the Mic input signal, in this case one certainly does not want MEMS signals.
+      // the Mic input signal, in this case one certainly does not want signals from the
+      // MEMS microphone on the other channel.
       //
       // Perhaps one should implement a possibility to "switch" between the left and right
       // channel in the sense that the "chosen" signal occurs in both channels.
       //
-      // DL1YCF comment end
-      // ==================
-      //
       // Sample setting for using a dynamic microphone (no bias) and muting the MEMS
-      //
+      // ---------------------------------------------------------------------------
       //wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
       //wm8960->enableMicBias(0);             // 1 = Bias on, 0 = Bias off
-      //wm8960->inputLevel(0.8F, 0.0F);       // volume control for mic input (Dynamic Mic and no MEMS)
+      //wm8960->inputLevel(0.9F, 0.0F);       // volume control for mic input (Dynamic Mic and no MEMS)
+      //
+      // Sample setting for using an electret microphone (with bias) and muting the MEMS
+      // -------------------------------------------------------------------------------
+      //wm8960->inputSelect(0);               // 0 = Mic, 1 = LineIn
+      //wm8960->enableMicBias(1);             // 1 = Bias on, 0 = Bias off
+      //wm8960->inputLevel(0.5F, 0.0F);       // volume control for mic input (Dynamic Mic and no MEMS)
       //
       //
       // Default Setting:
@@ -135,18 +142,23 @@ void CWKeyerShield::setup(void)
       sgtl5000->enable();
       sgtl5000->volume(masterlevel_actual);
       //
-      // Note that this sets the Mic Bias voltage to 3.0 Volt and the Mic Bias
-      // output impedance to 2 kOhm, and this is "hard-wired" into control_sgtl5000
-      // in the audio library.
+      // Note that when using AUDIO_INPUT_MIC, this sets the Mic Bias voltage to 3.0 Volt
+      // and the Mic Bias output impedance to 2 kOhm (and this is "hard-wired"
+      // into control_sgtl5000.cpp  in the audio library).
       // The default microphone setting is 52 dB (40 dB preamp and 12 dB line-gain),
-      // the correct value depends on the microphone but here we use some 12 dB less
-      // Sample setting for using MIC input
-      //sgtl5000->inputSelect(AUDIO_INPUT_MIC);
-      //sgtl5000->micGain(40);
+      // the correct value depends on the microphone (here we use 40 dB)
+      // As an example, we also document secttings for using the Line-In input
+      // with a gain of 10 dB.
       //
-      // Default setting: use Line-In
-      sgtl5000->inputSelect(AUDIO_INPUT_LINEIN);
-      sgtl5000->lineInLevel(10);
+      // Sample setting: use Line-In with 10 dB Line-in gain
+      // ---------------------------------------------------
+      //sgtl5000->inputSelect(AUDIO_INPUT_LINEIN);
+      //sgtl5000->lineInLevel(10);
+      //
+      // Default setting for using MIC input with 40 dB gain
+      // --------------------------------------------------
+      sgtl5000->inputSelect(AUDIO_INPUT_MIC);
+      sgtl5000->micGain(40);
     }
 
     AudioInterrupts();
