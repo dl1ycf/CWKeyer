@@ -47,9 +47,10 @@ in all other cases "APPLE" should be used (although "WINDOWS" may work in many c
 
 When using HASAK, one should have a control window that sends MIDI commands to the
 KeyerShield configuring all sorts of things. When using the Winkey emulator,
-one normally relies on default initial settings.
+one normally relies on default initial settings. The problem is that different
+microphone setups require different initial settings.
 
-The problem now is when connecting a microphone. In most cases, either a dynamic
+In most cases, either a dynamic
 microphone or an electret microphone is used. When using an electret microphone,
 one needs to activate a DC bias on the microphone input line. This can be
 either the tip or the ring of the TRS microphone connector, and the selection
