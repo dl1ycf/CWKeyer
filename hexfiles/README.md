@@ -6,6 +6,8 @@ Unfortunately, there is no "one file suits all" here.
 Hex file names are of form XXXXX-YYYYY-ZZZZZ.hex, where XXXXX, YYYYY, and
 ZZZZZ encode the variant. The options are listed here.
 
+**Note all hex files are generated for a Teensy 4.0.**
+
 ## XXXXX: HASAK vs. TeensyWinkeyEmulator
 
 This choice determines which "sketch" you actually want to run. The HASAK software
