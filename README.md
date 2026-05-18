@@ -20,7 +20,8 @@ The Teensy 4 is programmed via a usb connection to a host computer. First, downl
 
 
 There are currently two keyer programs available, the "hasak" and the "TeensyWinkeyEmulator". Click on the "hexfiles" directory
-(at the top of this page), there is another README file describing which versions are available and which one you need.
+(at the top of this page), there is another README file describing which versions are available and which one you need. The
+hex files are deposited in the "hexfiles" directory as well.
 
 
 Install Arduino IDE and teensy  library update for Linux (64-bit x64-64) or MacOS
