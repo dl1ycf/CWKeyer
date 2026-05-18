@@ -19,7 +19,7 @@ so-called ,,hex files'' are provided. Still, these must be loaded into the Teens
 The Teensy 4 is programmed via a usb connection to a host computer. First, download and install the Teensy loader application for your operating system as described on [this page](https://www.pjrc.com/teensy/loader.html). Then start the teensy application. Press the programming button on the Teensy and the teensy app will change to show a picture of the board. Then select the ".hex" program file, select "program" and then "reboot".
 
 
-There are currently two keyer programs available, the "hasak" and the "TeensyWinkeyEmulator". Click on the "firmware" directory
+There are currently two keyer programs available, the "hasak" and the "TeensyWinkeyEmulator". Click on the "hexfiles" directory
 (at the top of this page), there is another README file describing which versions are available and which one you need.
 
 
