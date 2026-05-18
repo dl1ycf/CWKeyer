@@ -12,7 +12,9 @@ ZZZZZ encode the variant. The options are listed here.
 
 This choice determines which "sketch" you actually want to run. The HASAK software
 (by Roger E Critchlow Jr.) is a CW keyer software that, when run on the
-KeyerShield, can be configured via MIDI commands. Further information 
+KeyerShield, can be configured via MIDI commands. MIDI commands can only
+configure further aspects of the shield, like microphone settings etc.
+Further information 
 can be found on
 
 https://github.com/recri/hasak-ino
@@ -30,35 +32,37 @@ hex file, so XXXXX is either "HASAK" or "WINKEY".
 ## YYYYY: Windows vs. Apple USB audio
 
 At least for some previous versions of Windows, the USB sound driver had a non-standard
-behaviour in the data format for the so-called "explicit feedback". With this
+data format for the so-called "explicit feedback". With the feedback
 mechanism, a sound card (here: the Teensy) can slightly increase or decrease the
 rate at which the host computer sends data, to prevent over- or under-runs of
 audio data which result in audible clicks or drop-outs. Modifying the Teensy USB
-audio software such that it works best with windows yields a device that
-seemingly also works with LINUX computers and Apple Macintosh computer with an
-Intel chip, but unfortunately this then does not run with Apple Macintosh computers
-with an AppleSilicon chip.
+audio software such that it works best with Windows does not seem to
+strongly affect operation with 
+LINUX computers and Apple Macintosh computer with an
+Intel chip, but unfortunately Apple Macintosh computers
+with an AppleSilicon chip do not work when the Teensy USB audio module contains
+the "Windows workaround".
 
 Hex files names have YYYYY="WINDOWS" or YYYYY="APPLE". The "WINDOWS" version is
-best if the Teensy is connected to a computer running that operating system,
+best if the Teensy is connected to a computer running Windows,
 in all other cases "APPLE" should be used (although "WINDOWS" may work in many cases).
 
 ## ZZZZZ: Microphone options for the TeensyWinkeyEmulator
 
-When using HASAK, one should have a control window that sends MIDI commands to the
-KeyerShield configuring all sorts of things. When using the Winkey emulator,
-one normally relies on default initial settings. The problem is that different
-microphone setups require different initial settings.
+When using HASAK, a control window sending MIDI commands to the
+KeyerShield can adjust almost all operating parameters, including microphone
+settings. When using the TeensyWinkey emulator,
+default initial settings (which cannot be changed) determine the microphone setttings.
+The problem is that different
+microphone setups thus require different initial settings, that is, different hex files.
 
 In most cases, either a dynamic
 microphone or an electret microphone is used. When using an electret microphone,
-one needs to activate a DC bias on the microphone input line. This can be
-either the tip or the ring of the TRS microphone connector, and the selection
-is done via hardware jumpers on the KeyerShield. The second difference between
+one needs to activate a DC bias on the microphone input line. The second difference between
 electret and dynamic microphone is that the latter have a much lower (about 20 dB)
-signal level so one needs increased amplification in the codec chip.
+signal level so one needs more amplification in the codec chip input stage.
 
-Furthermore, there is a built-in MEMS microphone in the Keyer shield. While the
+Furthermore, the KeyerShield a built-in MEMS microphone in the Keyer shield. While the
 audio from the microphone connected to the microphone jack always appears in the
 left channel, the built-in MEMS microphone appears in the right channel.
 When using the microphone jack, one normally does not want signals from the
@@ -70,6 +74,9 @@ which I have produced hex files for the TeensyWinkeyEmulator:
 | DYNAMIC|  left channel preamp adjusted for dynamic microphones, BIAS off, and right channel (MEMS) preamp at minimal position|
 | ELECTRET| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp at minimal position|
 | BUILTIN| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp adjusted for built-in microphone|
+
+With the BUILTIN option, one can also use an electret microphone but then one may have unwanted audio signals
+in the right audio input channel.
 
 ## List of hex files
 
