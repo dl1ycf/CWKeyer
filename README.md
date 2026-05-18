@@ -57,25 +57,102 @@ Install teensy  library update for linux:
 Install teensy library update for MacOS:
 ----------------------------------------
 
-(Added by DL1YCF. Note this is best done from the "terminal" app, then this is very similar to the
-linux case).
+(Added by DL1YCF. Note this is for users with some Linux/UNIX experience)
 
-All the libraries are inside the Teensyduino "app" file bundle (which is a directory tree)
-/Applications/Teensyduino.app. Locate a sub-folder called "Audio", this will point you to
-the libraries for the Teensy. Normally this is located in
+The following procedure assumes that you can work with the "Terminal" app.
 
-/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries
+Step 1: Install IDE
 
-You can copy the "Audio" folder within that folder to a safe place (or just delete it),
-and do the same to the "cores" folder one step higher, that is, the "cores" folder within
+Download the Arduino 2.x.x IDE. At the time of this writing, the current version is 2.3.8.
+The Arduino IDE can be found at 
 
-/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr
+https://www.arduino.cc/en/software/
 
-Then proceed as in the linux case, that is, add a symbolic link named "cores" in the .../teensy/avr
-folder and two symbolic links called "Audio" and "CWKeyerShield" in the
-.../teensy/avr/libraries folder, that point to the directories "Audio", "cores" and
-"CWKeyerShield" where you have placed them after down-loading from this repository.
+Be sure to use the 2.x.x version and not the "legacy IDE" with version 1.8.19
+
+Step 2: Add Teensy support
+
+Start the Arduino IDE and go to the "Preferences" menu. At the bottom is an input field
+labeled as "Additional board manager URLs". Insert into the input field
+
+https://www.pjrc.com/teensy/package_teensy_index.json
+
+and this should then load the "Teensy (for Arduino 2.0.4 and later)"
+board manager. Its version at the time of this writing
+is 1.60.0.
 
 
+Step 3:
+
+Dowload modified USB and Audio code. The suggestion here
+is to download these to $HOME/github/cores and $HOME/github/Audio.
+Furthermore, download the software for the KeyerShield, and
+put it to $HOME/github/CWKeyer. In the procedure laid out here,
+you will have the "Keyer Shield" software ready-to-use
+in $HOME/github/CWKeyer.
+
+So type the following commands into a terminal window:
+
+cd $HOME
+mkdir github
+cd github
+git clone https://github.com/softerhardware/cores.git
+git clone https://github.com/softerhardware/Audio.git
+git clone --recurse-submodules git@github.com:softerhardware/CWKeyer.git
+cd CWKeyer
+git pull --recurse-submodules
 
 
+Step 4: Let the IDE use the updated libraries
+
+This is now the hardest part. You have to remove parts of the
+original Teensy software and replace it by the modified one. Here I
+suggest to make a backup of the original software and insert symbolic
+links to the new ones. The Teensy software resides in
+
+$HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0
+
+Commands to use new "cores" software
+
+cd $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0
+tar cfz cores.orig.tgz cores
+rm -r cores
+ln -s $HOME/github/cores cores
+
+Commands to use new "Audio" library
+
+cd $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0/libraries
+tar cfz Audio.orig.tgz Audio
+rm -r Audio
+ln -s $HOME/github/Audio Audio
+
+Commands to add new "CWKeyerShield" library
+
+cd $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0/libraries
+ln -s $HOME/github/CWKeyer/libraries/teensy/CWKeyerShield CWKeyerShield
+
+Step 5: Now you can compile!
+
+Now you can open a sketch containing software that uses the KeyerShield
+and let it go. For example, the sketch of the DL1YCF "WinKey" emulator
+should be in the directory $HOME/github/CWKeyer/firmware/TeensyWinkeyEmulator
+with file name TeensyWinkeyEmulator.ino.
+
+Now you can open the sketch by double-clickint it.
+To compile, you first have to specify "Teensy 4.0" as the board type (via Tools-->Boards). Then,
+the USB type must be "Serial + Midi + Audio" (via Tools-->USB Type).
+
+Try to compile the sketch by clicking the "Compile" button (leftmost
+in the top row of the IDE window, with the "check" sign).
+If you see the following in the
+bottom part (diagnostics window) of the IDE
+
+Opening Teensy Loader...
+Memory Usage on Teensy 4.0:
+  FLASH: code:75320, data:8876, headers:8984   free for files:1938436
+   RAM1: variables:13536, code:72776, padding:25528   free for local variables:412448
+   RAM2: variables:22976  free for malloc/new:501312
+
+then everything is OK. Klicking the "upload" button just to the right of
+the "compile" button (the "upload" button as an arrow pointing to the right).
+If everything goes well, the sketch is re-compiled and loaded into the Teensy.
