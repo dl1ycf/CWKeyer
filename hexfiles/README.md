@@ -66,5 +66,18 @@ which I have produced hex files for the TeensyWinkeyEmulator:
 | ELECTRET| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp at minimal position|
 | BUILTIN| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp adjusted for built-in microphone|
 
+## List of hex files
+
+```
+HASAK-WINDOWS-BUILTIN.hex
+WINKEY-WINDOWS-DYNAMIC.hex
+WINKEY-WINDOWS-ELECTRET.hex
+WINKEY-WINDOWS-BUILTIN.hex
+WINKEY-APPLE-DYNAMIC.hex
+WINKEY-APPLE-ELECTRET.hex
+WINKEY-APPLE-BUILTIN.hex
+```
+
+To "burn" the hex file into the teensy, download the file from this directory, and use the Teensy loader to load it into the Teensy,
 
 
