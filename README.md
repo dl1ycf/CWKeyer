@@ -36,102 +36,127 @@ You can find more details about how to work with git submodules on the internet.
 
 ### Teensy Libraries
 
-Current development is done using [Arduino IDE 1.8.19](https://www.arduino.cc/en/software) and [Teensyduino 1.56](https://www.pjrc.com/teensy/td_download.html). Please make sure those are installed.
+Current development is done using [Arduino IDE](https://www.arduino.cc/en/software) and [Teensyduino 1.60](https://www.pjrc.com/teensy/td_download.html). Please make sure those are installed.
 
 Updated libraries are required for glitchless 48kHz audio with the CW keyer hardware. These libraries are provided in this git repository. An easy way to use these libraries is to add symbolic links to the new libraries from the arduino IDE install. This is described below for Linux and MacOS systems.
 
 Be sure to select the "Teensy 4.0" board in the Tools-->Boards-->Teensiduino menu, and to select the "Serial + Midi + Audio" USB model in the Tools-->USB type menu,
 otherwise compilation will fail.
 
-Install teensy  library update for linux:
------------------------------------------
+Install teensy  library update for Linux (64-bit x64-64) or MacOS
+-----------------------------------------------------------------
 
- 1. cd arduino-1.8.19/hardware/teensy/avr
- 2. rm -rf cores   (This must be removed or moved outside of the arduino-1.8.19 area otherwise arduino will still pickup this code)
- 3. ln -s /home/shaynal/CWKeyer/libraries/teensy/cores .   (Substitute the path for your local git pull of the CWKeyer repository)
- 4. cd libraries
- 5. rm -rf Audio   (See step 2 comments)
- 6. ln -s /home/shaynal/CWKeyer/libraries/teensy/Audio .   (See step 3 comments)
- 7. ln -s /home/shaynal/CWKeyer/libraries/teensy/CWKeyerShield .   (See step 3 comments)
+The procedure for MacOS and Linux is actually so similar that we can present it
+in a unified way, but at very few places we have to distinguish between MacOS
+and Linux.
 
-Install teensy library update for MacOS:
-----------------------------------------
 
-(Added by DL1YCF. Note this is for users with some Linux/UNIX experience)
-
-The following procedure assumes that you can work with the "Terminal" app.
-
-Step 1: Install IDE
-
+ **Step 1: Install IDE**
+ 
 Download the Arduino 2.x.x IDE. At the time of this writing, the current version is 2.3.8.
 The Arduino IDE can be found at 
 
 https://www.arduino.cc/en/software/
 
-Be sure to use the 2.x.x version and not the "legacy IDE" with version 1.8.19
+Be sure to use the 2.x.x version and not the "legacy IDE" with version 1.8.19. 
 
-Step 2: Add Teensy support
+**LINUX variant:**
+Download
+the "Linux AppImage" which you can place e.g. on the Desktop. Double-clicking this
+icon opens the archive extractor and you have to decide where to put the software.
+So select Action-->Extract and choose your home directory. This created a directory,
+within your home directory, with name
 
-Start the Arduino IDE and go to the "Preferences" menu. At the bottom is an input field
+arduino-ide_2.3.8_Linux64bit
+
+Double-clicking the "arduino-ide" icon in that directory opens the IDE.
+
+**MacOS variant:**
+Download the app bundle relevant for your operating system and CPU type. You can double-click
+the app bundle as usual to start the IDE.
+
+**Step 2: Add Teensy support**
+
+This procedure is described onm
+
+https://www.pjrc.com/teensy/td_download.html
+
+and we repeat this here for convenience.
+Start the Arduino IDE and go to the "File-->Preferences" (LINUX) or "Arduino IDE-->Preferences" (MacOS)
+menu. At the bottom is an input field
 labeled as "Additional board manager URLs". Insert into the input field
 
+```
 https://www.pjrc.com/teensy/package_teensy_index.json
+```
 
-and this should then load the "Teensy (for Arduino 2.0.4 and later)"
-board manager. Its version at the time of this writing
-is 1.60.0.
+and click "OK". This should then add  Teensy support
+to the board manager. Its version at the time of this writing
+is 1.60.0. In the boards manager you should then find (scroll down far to the
+bottom) "Teensy (for Arduino 2.0.4 and later)" and have to click "Install" there.
 
-
-Step 3:
+**Step 3:**
 
 Dowload modified USB and Audio code. The suggestion here
-is to download these to $HOME/github/cores and $HOME/github/Audio.
-Furthermore, download the software for the KeyerShield, and
-put it to $HOME/github/CWKeyer. In the procedure laid out here,
-you will have the "Keyer Shield" software ready-to-use
-in $HOME/github/CWKeyer.
+is to create a directory "github" in your home directory
+and to place the components there. We also download
+the KeyerShield software and install it as described above,
+since we must refer to it in the next step. Of yours, you
+can place the software on your computer where you want, but
+then you have to adapt the following steps.
 
 So type the following commands into a terminal window:
 
+```
 cd $HOME
 mkdir github
 cd github
 git clone https://github.com/softerhardware/cores.git
 git clone https://github.com/softerhardware/Audio.git
-git clone --recurse-submodules git@github.com:softerhardware/CWKeyer.git
+git clone --recurse-submodules https://github.com/softerhardware/CWKeyer.git
 cd CWKeyer
 git pull --recurse-submodules
+```
 
-
-Step 4: Let the IDE use the updated libraries
+**Step 4: Let the IDE use the updated libraries**
 
 This is now the hardest part. You have to remove parts of the
 original Teensy software and replace it by the modified one. Here I
-suggest to make a backup of the original software and insert symbolic
-links to the new ones. The Teensy software resides in
+suggest to delete the old directories and insert symbolic
+links to the new ones. The Teensy software (Version 1.60 at the time
+of this writing) resides in
 
-$HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0
+LINUX:  $HOME/.arduino15/packages/teensy/hardware/avr/1.60.0
+MacOS:  $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0
+
+This location will be referred to as <teensy> in the procedure below.
+
 
 Commands to use new "cores" software
 
-cd $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0
-tar cfz cores.orig.tgz cores
+```
+cd <teensy>
 rm -r cores
 ln -s $HOME/github/cores cores
+```
 
 Commands to use new "Audio" library
 
-cd $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0/libraries
-tar cfz Audio.orig.tgz Audio
+```
+cd <teensy>/libraries
 rm -r Audio
 ln -s $HOME/github/Audio Audio
+```
 
 Commands to add new "CWKeyerShield" library
 
-cd $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0/libraries
+```
+cd <teensy>/libraries
 ln -s $HOME/github/CWKeyer/libraries/teensy/CWKeyerShield CWKeyerShield
+```
 
-Step 5: Now you can compile!
+Now you can compile (Applies both to Linux and MacOS)
+-----------------------------------------------------
 
 Now you can open a sketch containing software that uses the KeyerShield
 and let it go. For example, the sketch of the DL1YCF "WinKey" emulator
@@ -147,11 +172,13 @@ in the top row of the IDE window, with the "check" sign).
 If you see the following in the
 bottom part (diagnostics window) of the IDE
 
+```
 Opening Teensy Loader...
 Memory Usage on Teensy 4.0:
   FLASH: code:75320, data:8876, headers:8984   free for files:1938436
    RAM1: variables:13536, code:72776, padding:25528   free for local variables:412448
    RAM2: variables:22976  free for malloc/new:501312
+```
 
 then everything is OK. Klicking the "upload" button just to the right of
 the "compile" button (the "upload" button as an arrow pointing to the right).
