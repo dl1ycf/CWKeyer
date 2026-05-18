@@ -79,5 +79,7 @@ WINKEY-APPLE-BUILTIN.hex
 ```
 
 To "burn" the hex file into the teensy, download the file from this directory, and use the Teensy loader to load it into the Teensy,
+as described here:
 
+https://www.pjrc.com/teensy/loader.html
 
