@@ -1,3 +1,5 @@
+This page has been written by DL1YCF, do not blame errors on this page to anybody else.
+
 # Pre-compiled hex files
 
 Unfortunately, there is no "one file suits all" here.
@@ -82,4 +84,3 @@ To "burn" the hex file into the teensy, download the file from this directory, a
 as described here:
 
 https://www.pjrc.com/teensy/loader.html
-
