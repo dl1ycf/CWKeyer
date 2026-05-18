@@ -81,22 +81,16 @@ bottom) "Teensy (for Arduino 2.0.4 and later)" and have to click "Install" there
 
 **Step 3:**
 
-Dowload modified USB and Audio code. The suggestion here
-is to create a directory "github" in your home directory
-and to place the components there. We also download
-the KeyerShield software and install it as described above,
-since we must refer to it in the next step. Of yours, you
-can place the software on your computer where you want, but
-then you have to adapt the following steps.
+Dowload the CW-Keyer software, along with
+modified Teensy USB and Audio code. In this example,
+I shall put the software in the $HOME directory
+(with name CWKeyer), and if you put it somewhere else
+you will have to adjust some file paths below.
 
 So type the following commands into a terminal window:
 
 ```
 cd $HOME
-mkdir github
-cd github
-git clone https://github.com/softerhardware/cores.git
-git clone https://github.com/softerhardware/Audio.git
 git clone --recurse-submodules https://github.com/softerhardware/CWKeyer.git
 cd CWKeyer
 git pull --recurse-submodules
@@ -116,27 +110,21 @@ MacOS:  $HOME/Library/Arduino15/packages/teensy/hardware/avr/1.60.0
 This location will be referred to as <teensy> in the procedure below.
 
 
-Commands to use new "cores" software
+Commands to use new USB-Audio software
 
 ```
 cd <teensy>
 rm -r cores
-ln -s $HOME/github/cores cores
+ln -s $HOME/CWKeyer/libraries/teensy/cores .
 ```
 
-Commands to use new "Audio" library
+Commands to use new "Audio", and add the CWKeyerShield  library 
 
 ```
 cd <teensy>/libraries
 rm -r Audio
-ln -s $HOME/github/Audio Audio
-```
-
-Commands to add new "CWKeyerShield" library
-
-```
-cd <teensy>/libraries
-ln -s $HOME/github/CWKeyer/libraries/teensy/CWKeyerShield CWKeyerShield
+ln -s $HOME/CWKeyer/libraries/teensy/Audio .
+ln -s $HOME/CWKeyer/libraries/teensy/CWKeyerShield .
 ```
 
 Now you can compile (Applies both to Linux and MacOS)
