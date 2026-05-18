@@ -26,6 +26,10 @@ There are currently two keyer programs available, the "hasak" and the "TeensyWin
 Install Arduino IDE and teensy  library update for Linux (64-bit x64-64) or MacOS
 ---------------------------------------------------------------------------------
 
+This section is relevant for you if you want to modify the software according to
+your needs, or if you just want to compile the software from the sources before
+loading it into the Teensy.
+
 The procedure for MacOS and Linux is actually so similar that we can present it
 in a unified way, but at very few places we have to distinguish between MacOS
 and Linux.
