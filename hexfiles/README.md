@@ -60,9 +60,11 @@ When using the microphone jack, one normally does not want signals from the
 built-in MEMS microphone. So at the moment there are three scenarios for
 which I have produced hex files for the TeensyWinkeyEmulator:
 
-|ZZZZ=DYNAMIC:|  left channel preamp adjusted for dynamic microphones, BIAS off, and right channel (MEMS) preamp at minimal position|
-|ZZZZ=ELECTRET:| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp at minimal position|
-|ZZZZ=BUILTIN:| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp adjusted for buils-in microphone|
+| ZZZZ | Description |
+| -------- | -------- |
+| DYNAMIC|  left channel preamp adjusted for dynamic microphones, BIAS off, and right channel (MEMS) preamp at minimal position|
+| ELECTRET| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp at minimal position|
+| BUILTIN| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp adjusted for built-in microphone|
 
 
 
