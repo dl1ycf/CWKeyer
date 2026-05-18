@@ -41,4 +41,28 @@ in all other cases "APPLE" should be used (although "WINDOWS" may work in many c
 
 ## ZZZZZ: Microphone options for the TeensyWinkeyEmulator
 
+When using HASAK, one should have a control window that sends MIDI commands to the
+KeyerShield configuring all sorts of things. When using the Winkey emulator,
+one normally relies on default initial settings.
+
+The problem now is when connecting a microphone. In most cases, either a dynamic
+microphone or an electret microphone is used. When using an electret microphone,
+one needs to activate a DC bias on the microphone input line. This can be
+either the tip or the ring of the TRS microphone connector, and the selection
+is done via hardware jumpers on the KeyerShield. The second difference between
+electret and dynamic microphone is that the latter have a much lower (about 20 dB)
+signal level so one needs increased amplification in the codec chip.
+
+Furthermore, there is a built-in MEMS microphone in the Keyer shield. While the
+audio from the microphone connected to the microphone jack always appears in the
+left channel, the built-in MEMS microphone appears in the right channel.
+When using the microphone jack, one normally does not want signals from the
+built-in MEMS microphone. So at the moment there are three scenarios for
+which I have produced hex files for the TeensyWinkeyEmulator:
+
+|ZZZZ=DYNAMIC:|  left channel preamp adjusted for dynamic microphones, BIAS off, and right channel (MEMS) preamp at minimal position|
+|ZZZZ=ELECTRET:| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp at minimal position|
+|ZZZZ=BUILTIN:| left channel preamp adjusted for electret microphones, BIAS on, and right channel (MEMS) preamp adjusted for buils-in microphone|
+
+
 
