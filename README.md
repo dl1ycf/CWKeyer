@@ -47,8 +47,8 @@ Updated libraries are required for glitchless 48kHz audio with the CW keyer hard
 Be sure to select the "Teensy 4.0" board in the Tools-->Boards-->Teensiduino menu, and to select the "Serial + Midi + Audio" USB model in the Tools-->USB type menu,
 otherwise compilation will fail.
 
-Install teensy  library update for Linux (64-bit x64-64) or MacOS
------------------------------------------------------------------
+Install Arduino IDE and teensy  library update for Linux (64-bit x64-64) or MacOS
+---------------------------------------------------------------------------------
 
 The procedure for MacOS and Linux is actually so similar that we can present it
 in a unified way, but at very few places we have to distinguish between MacOS
